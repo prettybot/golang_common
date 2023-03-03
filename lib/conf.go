@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	dlog "github.com/e421083458/golang_common/log"
+	dlog "github.com/prettybot/golang_common/log"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"

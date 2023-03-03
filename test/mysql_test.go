@@ -3,7 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
-	"github.com/e421083458/golang_common/lib"
+	"github.com/prettybot/golang_common/lib"
 	"gorm.io/gorm"
 	"testing"
 	"time"

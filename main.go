@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/e421083458/golang_common/lib"
+	"github.com/prettybot/golang_common/lib"
 	"log"
 	"time"
 )

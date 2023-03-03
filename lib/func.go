@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
-	dlog "github.com/e421083458/golang_common/log"
+	dlog "github.com/prettybot/golang_common/log"
 	"io/ioutil"
 	"log"
 	"math/rand"

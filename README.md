@@ -28,7 +28,7 @@
 配置 Golang 基础服务（mysql、redis、http.client、log）比较繁琐，如果想 **快速接入** 基础服务可以使用本类库。
 没有多余复杂的功能，方便你拓展其他功能。
 你可以 import 引入直接使用，也可以拷贝代码到自己项目中使用，也可以用于构建自己的基础类库。
-项目地址：https://github.com/e421083458/golang_common
+项目地址：https://github.com/prettybot/golang_common
 
 ## 功能
  1. 多套配置环境设置，比如：dev、prod。
@@ -38,9 +38,9 @@
 ## 安装及使用
  1. 需要确保已经安装了 Go 1.8+，然后执行以下命令
 ```
-go get -v github.com/e421083458/golang_common
+go get -v github.com/prettybot/golang_common
 ```
-2. 将配置文件拷贝到你的项目中，配置文件请参考：https://github.com/e421083458/golang_common/tree/master/conf/dev
+2. 将配置文件拷贝到你的项目中，配置文件请参考：https://github.com/prettybot/golang_common/tree/master/conf/dev
 可以通过 InitModule("配置地址","模块数组") 方法按模块需加载配置。
 
 - base：包含日志和系统时间配置等
@@ -53,7 +53,7 @@ go get -v github.com/e421083458/golang_common
 package main
 
 import (
-	"github.com/e421083458/golang_common/lib"
+	"github.com/prettybot/golang_common/lib"
 	"log"
 	"time"
 )

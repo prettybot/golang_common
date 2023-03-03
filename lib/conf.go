@@ -2,14 +2,15 @@ package lib
 
 import (
 	"bytes"
-	"database/sql"
-	dlog "github.com/e421083458/golang_common/log"
-	"github.com/spf13/viper"
-	"gorm.io/gorm"
 	"io/ioutil"
 	"os"
 	"strings"
 	"time"
+
+	dlog "github.com/e421083458/golang_common/log"
+	"github.com/jmoiron/sqlx"
+	"github.com/spf13/viper"
+	"gorm.io/gorm"
 )
 
 type BaseConf struct {
@@ -66,17 +67,17 @@ type RedisConf struct {
 	WriteTimeout int      `mapstructure:"write_timeout"`
 }
 
-//全局变量
+// 全局变量
 var ConfBase *BaseConf
-var DBMapPool map[string]*sql.DB
+var DBMapPool map[string]*sqlx.DB
 var GORMMapPool map[string]*gorm.DB
-var DBDefaultPool *sql.DB
+var DBDefaultPool *sqlx.DB
 var GORMDefaultPool *gorm.DB
 var ConfRedis *RedisConf
 var ConfRedisMap *RedisMapConf
 var ViperConfMap map[string]*viper.Viper
 
-//获取基本配置信息
+// 获取基本配置信息
 func GetBaseConf() *BaseConf {
 	return ConfBase
 }
@@ -147,7 +148,7 @@ func InitRedisConf(path string) error {
 	return nil
 }
 
-//初始化配置文件
+// 初始化配置文件
 func InitViperConf() error {
 	f, err := os.Open(ConfEnvPath + "/")
 	if err != nil {
@@ -176,7 +177,7 @@ func InitViperConf() error {
 	return nil
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetStringConf(key string) string {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
@@ -186,116 +187,116 @@ func GetStringConf(key string) string {
 	if !ok {
 		return ""
 	}
-	confString := v.GetString(strings.Join(keys[1:len(keys)], "."))
+	confString := v.GetString(strings.Join(keys[1:], "."))
 	return confString
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetStringMapConf(key string) map[string]interface{} {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return nil
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetStringMap(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetStringMap(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetConf(key string) interface{} {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return nil
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.Get(strings.Join(keys[1:len(keys)], "."))
+	conf := v.Get(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetBoolConf(key string) bool {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return false
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetBool(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetBool(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetFloat64Conf(key string) float64 {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return 0
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetFloat64(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetFloat64(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetIntConf(key string) int {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return 0
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetInt(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetInt(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetStringMapStringConf(key string) map[string]string {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return nil
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetStringMapString(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetStringMapString(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetStringSliceConf(key string) []string {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return nil
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetStringSlice(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetStringSlice(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取get配置信息
+// 获取get配置信息
 func GetTimeConf(key string) time.Time {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return time.Now()
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetTime(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetTime(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//获取时间阶段长度
+// 获取时间阶段长度
 func GetDurationConf(key string) time.Duration {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return 0
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.GetDuration(strings.Join(keys[1:len(keys)], "."))
+	conf := v.GetDuration(strings.Join(keys[1:], "."))
 	return conf
 }
 
-//是否设置了key
+// 是否设置了key
 func IsSetConf(key string) bool {
 	keys := strings.Split(key, ".")
 	if len(keys) < 2 {
 		return false
 	}
 	v := ViperConfMap[keys[0]]
-	conf := v.IsSet(strings.Join(keys[1:len(keys)], "."))
+	conf := v.IsSet(strings.Join(keys[1:], "."))
 	return conf
 }

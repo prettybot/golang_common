@@ -2,15 +2,16 @@ package lib
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"
-	"time"
 )
 
 func InitDBPool(path string) error {
@@ -24,10 +25,10 @@ func InitDBPool(path string) error {
 		fmt.Printf("[INFO] %s%s\n", time.Now().Format(TimeFormat), " empty mysql config.")
 	}
 
-	DBMapPool = map[string]*sql.DB{}
+	DBMapPool = map[string]*sqlx.DB{}
 	GORMMapPool = map[string]*gorm.DB{}
 	for confName, DbConf := range DbConfMap.List {
-		dbpool, err := sql.Open("mysql", DbConf.DataSourceName)
+		dbpool, err := sqlx.Open("mysql", DbConf.DataSourceName)
 		if err != nil {
 			return err
 		}
@@ -60,7 +61,7 @@ func InitDBPool(path string) error {
 	return nil
 }
 
-func GetDBPool(name string) (*sql.DB, error) {
+func GetDBPool(name string) (*sqlx.DB, error) {
 	if dbpool, ok := DBMapPool[name]; ok {
 		return dbpool, nil
 	}
@@ -78,14 +79,14 @@ func CloseDB() error {
 	for _, dbpool := range DBMapPool {
 		dbpool.Close()
 	}
-	DBMapPool = make(map[string]*sql.DB)
+	DBMapPool = make(map[string]*sqlx.DB)
 	GORMMapPool = make(map[string]*gorm.DB)
 	return nil
 }
 
-func DBPoolLogQuery(trace *TraceContext, sqlDb *sql.DB, query string, args ...interface{}) (*sql.Rows, error) {
+func DBPoolLogQuery(trace *TraceContext, sqlDb *sqlx.DB, query string, args ...interface{}) (*sqlx.Rows, error) {
 	startExecTime := time.Now()
-	rows, err := sqlDb.Query(query, args...)
+	rows, err := sqlDb.Queryx(query, args...)
 	endExecTime := time.Now()
 	if err != nil {
 		Log.TagError(trace, "_com_mysql_success", map[string]interface{}{
@@ -103,10 +104,10 @@ func DBPoolLogQuery(trace *TraceContext, sqlDb *sql.DB, query string, args ...in
 	return rows, err
 }
 
-//mysql 日志打印类型
+// mysql 日志打印类型
 var DefaultMysqlGormLogger = MysqlGormLogger{
-	LogLevel:logger.Info,
-	SlowThreshold:200 * time.Millisecond,
+	LogLevel:      logger.Info,
+	SlowThreshold: 200 * time.Millisecond,
 }
 
 type MysqlGormLogger struct {
